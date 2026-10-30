@@ -1,0 +1,37 @@
+application:
+  subdomain: hemmelig
+  multi_instance: false
+  upstreams:
+    - location: /
+      backend: http://hemmelig:3000/
+services:
+  hemmelig:
+    # upstream: docker.io/hemmeligapp/hemmelig:v7.6.1
+    image: docker.1ms.run/hemmeligapp/hemmelig:v7.6.1
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/database/hemmelig.db
+      - BETTER_AUTH_SECRET={{ stable_secret "hemmelig_auth_secret" }}
+      - BETTER_AUTH_URL=https://{{.S.AppDomain}}
+      - HEMMELIG_BASE_URL=https://{{.S.AppDomain}}
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://localhost:3000/api/health/ready
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    binds:
+      - /lzcapp/var/database:/app/database
+      - /lzcapp/var/uploads:/app/uploads
+usage: |
+  Hemmelig 加密秘密分享：粘贴敏感信息（密码、密钥、文本）生成加密链接，支持限时、阅后即焚、访问限制。链接接收方无需登录即可解密查看。
+  数据库与上传文件保存在应用数据目录；分享的秘密过期后自动销毁。
+  入口保留懒猫登录保护；无公开路径。应用内附件上传走浏览器原生表单，未接入文件选择器拦截。
+  未验证实机部署后的加密分享全流程。

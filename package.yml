@@ -1,0 +1,18 @@
+package: community.lazycat.app.hemmelig
+version: 7.6.1
+name: Hemmelig
+description: Share encrypted secrets with expiring, one-time-view links.
+min_os_version: "1.5.0"
+homepage: https://github.com/HemmeligOrg/Hemmelig.app
+author: HemmeligOrg
+license: MIT
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Hemmelig
+    description: 加密秘密分享服务，生成限时、阅后即焚的私密链接。
+  en:
+    name: Hemmelig
+    description: Share encrypted secrets with expiring, one-time-view links.
